@@ -2,14 +2,34 @@
 // Add interactivity here as needed
 
 document.addEventListener('DOMContentLoaded', function() {
+  const TT_API_ENDPOINT = 'https://tiktoklinkshare-vercel.vercel.app/fetch-real-ttlink';
   const input = document.getElementById('ttlink');
   const deleteBtn = document.getElementById('delete-btn');
+  const loader = document.getElementById('loader-backdrop');
 
   // Clear input when delete button is clicked
   deleteBtn.addEventListener('click', function() {
     input.value = '';
     input.focus();
   });
+
+  function showWarningPopup(message) {
+    let popup = document.createElement('div');
+    popup.className = 'warning-popup';
+    popup.textContent = message;
+    document.body.appendChild(popup);
+    setTimeout(() => {
+      popup.classList.add('fade');
+      setTimeout(() => popup.remove(), 500);
+    }, 5000);
+  }
+
+  function showLoader() {
+    loader.style.display = 'flex';
+  }
+  function hideLoader() {
+    loader.style.display = 'none';
+  }
 
   input.addEventListener('paste', async function(e) {
     let pastedText = '';
@@ -18,55 +38,25 @@ document.addEventListener('DOMContentLoaded', function() {
     } else if (window.clipboardData && window.clipboardData.getData) {
       pastedText = window.clipboardData.getData('Text');
     }
-    let urlToProcess = pastedText;
-    let is301 = false;
-    let location = null;
-    // Try to follow 301 redirect
+    if (!pastedText) return;
+    showLoader();
     try {
-      const response = await fetch(pastedText, { method: 'GET', redirect: 'manual' });
-      if (response.status === 301) {
-        location = response.headers.get('Location');
-        if (location) {
-          urlToProcess = location;
-          is301 = true;
+      const apiUrl = `${TT_API_ENDPOINT}?url=${encodeURIComponent(pastedText)}`;
+      const response = await fetch(apiUrl);
+      const data = await response.json();
+      hideLoader();
+      if (data.status === 301 && data['purified-location']) {
+        input.value = '';
+        input.value = data['purified-location'];
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(data['purified-location']);
         }
-      }
-    } catch (err) {
-      // fetch may fail due to CORS or invalid URL, fallback to pastedText
-    }
-    if (!is301) {
-      showWarning('The link is not a valid TikTok URL coming from the share button.');
-      e.preventDefault();
-      return;
-    }
-    // Remove query string from URL
-    try {
-      const url = new URL(urlToProcess);
-      const cleanUrl = url.origin + url.pathname;
-      input.value = cleanUrl;
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        await navigator.clipboard.writeText(cleanUrl);
       } else {
-        input.select();
-        document.execCommand('copy');
+        showWarningPopup('The link is not a valid TikTok URL from the share button.');
       }
-      e.preventDefault();
     } catch (err) {
-      // Not a valid URL, do nothing
+      hideLoader();
+      showWarningPopup('Error processing the link.');
     }
   });
-
-  // Fancy warning popup
-  function showWarning(message) {
-    let popup = document.createElement('div');
-    popup.className = 'warning-popup';
-    popup.textContent = message;
-    document.body.appendChild(popup);
-    setTimeout(() => {
-      popup.classList.add('fade');
-      setTimeout(() => {
-        popup.remove();
-      }, 500);
-    }, 5000);
-  }
 });

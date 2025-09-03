@@ -10,10 +10,18 @@
   <div class="hero">
     <img src="resources/logo.png" alt="Logo" class="logo">
     <div class="center-input">
-      <label style="display: flex; align-items: center; gap: 12px;">
+      <label class="input-label">
         <input id="ttlink" type="text" class="sleek-input" placeholder="Paste your TikTok link here...">
         <button id="delete-btn" type="button" class="delete-btn" aria-label="Clear input">✕</button>
       </label>
+    </div>
+  </div>
+  <div id="loader-backdrop" class="loader-backdrop" style="display:none;">
+    <div class="loader-icon">
+      <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+        <circle cx="32" cy="32" r="28" stroke="#d48806" stroke-width="8" opacity="0.2"/>
+        <circle cx="32" cy="32" r="28" stroke="#d48806" stroke-width="8" stroke-linecap="round" stroke-dasharray="44 100"/>
+      </svg>
     </div>
   </div>
   <script src="script.js"></script>
