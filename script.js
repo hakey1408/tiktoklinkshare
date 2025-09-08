@@ -3,6 +3,7 @@
 
 document.addEventListener('DOMContentLoaded', function() {
   const TT_API_ENDPOINT = 'https://tiktoklinkshare-vercel.vercel.app/fetch-real-ttlink';
+  const API_KEY = 'FrfqeMIIFxQImf701DS4HhSzG43EN8nCPqXlQnMW9JY';
   const input = document.getElementById('ttlink');
   const deleteBtn = document.getElementById('delete-btn');
   const loader = document.getElementById('loader-backdrop');
@@ -31,25 +32,35 @@ document.addEventListener('DOMContentLoaded', function() {
     loader.style.display = 'none';
   }
 
-  input.addEventListener('paste', async function(e) {
-    let pastedText = '';
-    if (e.clipboardData && e.clipboardData.getData) {
-      pastedText = e.clipboardData.getData('text');
-    } else if (window.clipboardData && window.clipboardData.getData) {
-      pastedText = window.clipboardData.getData('Text');
-    }
+  // Unified handler for paste and enter
+  async function handleTiktokLinkProcess(pastedText) {
     if (!pastedText) return;
     showLoader();
     try {
       const apiUrl = `${TT_API_ENDPOINT}?url=${encodeURIComponent(pastedText)}`;
-      const response = await fetch(apiUrl);
+      const response = await fetch(apiUrl, {
+        headers: {
+          'x-api-key': API_KEY
+        }
+      });
       const data = await response.json();
       hideLoader();
       if (data.status === 301 && data['purified-location']) {
         input.value = '';
         input.value = data['purified-location'];
-        if (navigator.clipboard) {
-          navigator.clipboard.writeText(data['purified-location']);
+        // Copy to clipboard: fallback for iOS
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard.writeText(data['purified-location']).catch(() => {
+            // fallback below
+            input.select();
+            document.execCommand('copy');
+            input.setSelectionRange(0, 0); // remove selection
+          });
+        } else {
+          // fallback for iOS and non-secure context
+          input.select();
+          document.execCommand('copy');
+          input.setSelectionRange(0, 0); // remove selection
         }
       } else {
         showWarningPopup('The link is not a valid TikTok URL from the share button.');
@@ -57,6 +68,22 @@ document.addEventListener('DOMContentLoaded', function() {
     } catch (err) {
       hideLoader();
       showWarningPopup('Error processing the link.');
+    }
+  }
+
+  input.addEventListener('paste', function(e) {
+    let pastedText = '';
+    if (e.clipboardData && e.clipboardData.getData) {
+      pastedText = e.clipboardData.getData('text');
+    } else if (window.clipboardData && window.clipboardData.getData) {
+      pastedText = window.clipboardData.getData('Text');
+    }
+    handleTiktokLinkProcess(pastedText);
+  });
+
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      handleTiktokLinkProcess(input.value);
     }
   });
 });
