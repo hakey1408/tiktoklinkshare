@@ -25,6 +25,56 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 5000);
   }
 
+  /**
+   * Copy a string to clipboard
+   * @param  {String} string         The string to be copied to clipboard
+   * @return {Boolean}               returns a boolean correspondent to the success of the copy operation.
+   * @see https://stackoverflow.com/a/53951634/938822
+   */
+  function copyToClipboard(string) {
+    let textarea;
+    let result;
+
+    try {
+      textarea = document.createElement('textarea');
+      textarea.setAttribute('readonly', true);
+      textarea.setAttribute('contenteditable', true);
+      textarea.style.position = 'fixed'; // prevent scroll from jumping to the bottom when focus is set.
+      textarea.value = string;
+
+      document.body.appendChild(textarea);
+
+      textarea.focus();
+      textarea.select();
+
+      const range = document.createRange();
+      range.selectNodeContents(textarea);
+
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+
+      textarea.setSelectionRange(0, textarea.value.length);
+      result = document.execCommand('copy');
+    } catch (err) {
+      console.error(err);
+      result = null;
+    } finally {
+      document.body.removeChild(textarea);
+    }
+
+    // manual copy fallback using prompt
+    if (!result) {
+      const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+      const copyHotkey = isMac ? '⌘C' : 'CTRL+C';
+      result = prompt(`Press ${copyHotkey}`, string); // eslint-disable-line no-alert
+      if (!result) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   function showLoader() {
     loader.style.display = 'flex';
   }
@@ -48,20 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (data.status === 301 && data['purified-location']) {
         input.value = '';
         input.value = data['purified-location'];
-        // Copy to clipboard: fallback for iOS
-        if (navigator.clipboard && window.isSecureContext) {
-          navigator.clipboard.writeText(data['purified-location']).catch(() => {
-            // fallback below
-            input.select();
-            document.execCommand('copy');
-            input.setSelectionRange(0, 0); // remove selection
-          });
-        } else {
-          // fallback for iOS and non-secure context
-          input.select();
-          document.execCommand('copy');
-          input.setSelectionRange(0, 0); // remove selection
-        }
+        copyToClipboard(data['purified-location']);
       } else {
         showWarningPopup('The link is not a valid TikTok URL from the share button.');
       }
