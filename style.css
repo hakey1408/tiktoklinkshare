@@ -452,6 +452,10 @@ body, html {
     font-size: 0.95rem;
     padding: var(--spacing-md);
   }
+
+  .help-modal-header h2 {
+    font-size: 1.3rem;
+  }
 }
 
 /* Desktop Styles */
@@ -578,7 +582,7 @@ body, html {
 
 .help-modal-header h2 {
   margin: 0;
-  font-size: 1.25rem;
+  font-size: 1.10rem;
   font-weight: 600;
   color: var(--text-dark);
 }

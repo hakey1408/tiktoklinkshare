@@ -1,0 +1,242 @@
+{
+  "en": {
+    "meta": {
+      "title": "TikTok Link Share - Remove Tracking Parameters | Free Tool",
+      "description": "Clean TikTok share links by removing tracking parameters. Free tool to get clean, shortened TikTok URLs without query strings for better sharing.",
+      "keywords": "TikTok, link cleaner, URL shortener, remove tracking, clean links, TikTok share"
+    },
+    "ui": {
+      "skipToContent": "Skip to main content",
+      "logoAlt": "TikTok Link Share Logo",
+      "toolHeading": "TikTok Link Share Tool",
+      "helpButton": "Show help guide",
+      "helpButtonTooltip": "How to use this tool",
+      "inputPlaceholder": "Paste your TikTok link here...",
+      "inputLabel": "Enter TikTok link to clean",
+      "inputHelp": "Paste a TikTok share link and press Enter or wait for automatic processing",
+      "clearButton": "Clear input field",
+      "clearTooltip": "Clear input",
+      "copyButton": "Copy cleaned link to clipboard",
+      "copyTooltip": "Copy to clipboard",
+      "processing": "Processing TikTok link"
+    },
+    "help": {
+      "title": "How to Use TikTok Link Share",
+      "close": "Close help guide",
+      "closeTooltip": "Close",
+      "step1Title": "Copy TikTok Link",
+      "step1Description": "Copy the TikTok link you have received or from the share button of the TikTok application.",
+      "step2Title": "Paste and Process",
+      "step2Description": "Paste the link into the input field in the middle of the screen and wait for the process to finish.",
+      "step3Title": "Copy Clean Link",
+      "step3Description": "Copy the link by clicking on the copy button that appears below. The link is ready to be used in the browser. Just paste it in a new tab!"
+    },
+    "messages": {
+      "invalidLink": "The link is not a valid TikTok URL from the share button.",
+      "processingError": "Error processing the link.",
+      "copySuccess": "Link copied to clipboard",
+      "copyFailed": "Failed to copy to clipboard",
+      "inputCleared": "Input field cleared",
+      "linkCleaned": "Link cleaned successfully. Copy button is now available.",
+      "helpOpened": "Help guide opened",
+      "helpClosed": "Help guide closed",
+      "processingLink": "Processing TikTok link..."
+    },
+    "footer": {
+      "credits": "Credits:",
+      "copyright": "Copyright ©"
+    }
+  },
+  "es": {
+    "meta": {
+      "title": "TikTok Link Share - Eliminar Parámetros de Seguimiento | Herramienta Gratuita",
+      "description": "Limpia enlaces compartidos de TikTok eliminando parámetros de seguimiento. Herramienta gratuita para obtener URLs limpias y cortas de TikTok.",
+      "keywords": "TikTok, limpiador de enlaces, acortador de URL, eliminar seguimiento, enlaces limpios, compartir TikTok"
+    },
+    "ui": {
+      "skipToContent": "Saltar al contenido principal",
+      "logoAlt": "TikTok Link Share Logo",
+      "toolHeading": "Herramienta TikTok Link Share",
+      "helpButton": "Mostrar guía de ayuda",
+      "helpButtonTooltip": "Cómo usar esta herramienta",
+      "inputPlaceholder": "Pega tu enlace de TikTok aquí...",
+      "inputLabel": "Introduce el enlace de TikTok para limpiar",
+      "inputHelp": "Pega un enlace compartido de TikTok y presiona Enter o espera el procesamiento automático",
+      "clearButton": "Limpiar campo de entrada",
+      "clearTooltip": "Limpiar entrada",
+      "copyButton": "Copiar enlace limpio al portapapeles",
+      "copyTooltip": "Copiar al portapapeles",
+      "processing": "Procesando enlace de TikTok"
+    },
+    "help": {
+      "title": "Cómo Usar TikTok Link Share",
+      "close": "Cerrar guía de ayuda",
+      "closeTooltip": "Cerrar",
+      "step1Title": "Copiar Enlace TikTok",
+      "step1Description": "Copia el enlace de TikTok que has recibido o desde el botón de compartir de la aplicación TikTok.",
+      "step2Title": "Pegar y Procesar",
+      "step2Description": "Pega el enlace en el campo de entrada en el centro de la pantalla y espera a que termine el proceso.",
+      "step3Title": "Copiar Enlace Limpio",
+      "step3Description": "Copia el enlace haciendo clic en el botón copiar que aparece abajo. ¡El enlace está listo para usar en el navegador. Solo pégalo en una nueva pestaña!"
+    },
+    "messages": {
+      "invalidLink": "El enlace no es una URL válida de TikTok del botón de compartir.",
+      "processingError": "Error al procesar el enlace.",
+      "copySuccess": "Enlace copiado al portapapeles",
+      "copyFailed": "Error al copiar al portapapeles",
+      "inputCleared": "Campo de entrada limpiado",
+      "linkCleaned": "Enlace limpiado exitosamente. El botón copiar ya está disponible.",
+      "helpOpened": "Guía de ayuda abierta",
+      "helpClosed": "Guía de ayuda cerrada",
+      "processingLink": "Procesando enlace de TikTok..."
+    },
+    "footer": {
+      "credits": "Créditos:",
+      "copyright": "Derechos de autor ©"
+    }
+  },
+  "fr": {
+    "meta": {
+      "title": "TikTok Link Share - Supprimer les Paramètres de Suivi | Outil Gratuit",
+      "description": "Nettoyez les liens partagés TikTok en supprimant les paramètres de suivi. Outil gratuit pour obtenir des URLs TikTok propres et courtes.",
+      "keywords": "TikTok, nettoyeur de liens, raccourcisseur d'URL, supprimer suivi, liens propres, partage TikTok"
+    },
+    "ui": {
+      "skipToContent": "Passer au contenu principal",
+      "logoAlt": "TikTok Link Share Logo",
+      "toolHeading": "Outil TikTok Link Share",
+      "helpButton": "Afficher le guide d'aide",
+      "helpButtonTooltip": "Comment utiliser cet outil",
+      "inputPlaceholder": "Collez votre lien TikTok ici...",
+      "inputLabel": "Entrez le lien TikTok à nettoyer",
+      "inputHelp": "Collez un lien partagé TikTok et appuyez sur Entrée ou attendez le traitement automatique",
+      "clearButton": "Effacer le champ de saisie",
+      "clearTooltip": "Effacer la saisie",
+      "copyButton": "Copier le lien nettoyé dans le presse-papiers",
+      "copyTooltip": "Copier dans le presse-papiers",
+      "processing": "Traitement du lien TikTok"
+    },
+    "help": {
+      "title": "Comment Utiliser TikTok Link Share",
+      "close": "Fermer le guide d'aide",
+      "closeTooltip": "Fermer",
+      "step1Title": "Copier le Lien TikTok",
+      "step1Description": "Copiez le lien TikTok que vous avez reçu ou depuis le bouton de partage de l'application TikTok.",
+      "step2Title": "Coller et Traiter",
+      "step2Description": "Collez le lien dans le champ de saisie au centre de l'écran et attendez la fin du processus.",
+      "step3Title": "Copier le Lien Propre",
+      "step3Description": "Copiez le lien en cliquant sur le bouton copier qui apparaît en dessous. Le lien est prêt à être utilisé dans le navigateur. Collez-le simplement dans un nouvel onglet!"
+    },
+    "messages": {
+      "invalidLink": "Le lien n'est pas une URL TikTok valide du bouton de partage.",
+      "processingError": "Erreur lors du traitement du lien.",
+      "copySuccess": "Lien copié dans le presse-papiers",
+      "copyFailed": "Échec de la copie dans le presse-papiers",
+      "inputCleared": "Champ de saisie effacé",
+      "linkCleaned": "Lien nettoyé avec succès. Le bouton copier est maintenant disponible.",
+      "helpOpened": "Guide d'aide ouvert",
+      "helpClosed": "Guide d'aide fermé",
+      "processingLink": "Traitement du lien TikTok..."
+    },
+    "footer": {
+      "credits": "Crédits:",
+      "copyright": "Droits d'auteur ©"
+    }
+  },
+  "it": {
+    "meta": {
+      "title": "TikTok Link Share - Rimuovi Parametri di Tracciamento | Strumento Gratuito",
+      "description": "Pulisci i link condivisi di TikTok rimuovendo i parametri di tracciamento. Strumento gratuito per ottenere URL TikTok puliti e corti.",
+      "keywords": "TikTok, pulitore link, abbreviatore URL, rimuovi tracciamento, link puliti, condivisione TikTok"
+    },
+    "ui": {
+      "skipToContent": "Salta al contenuto principale",
+      "logoAlt": "TikTok Link Share Logo",
+      "toolHeading": "Strumento TikTok Link Share",
+      "helpButton": "Mostra guida aiuto",
+      "helpButtonTooltip": "Come usare questo strumento",
+      "inputPlaceholder": "Incolla il tuo link TikTok qui...",
+      "inputLabel": "Inserisci il link di TikTok da condividere",
+      "inputHelp": "Incolla un link condiviso da TikTok e premi Invio o attendi l'elaborazione automatica",
+      "clearButton": "Pulisci campo di input",
+      "clearTooltip": "Pulisci input",
+      "copyButton": "Copia link condivisible negli appunti",
+      "copyTooltip": "Copia negli appunti",
+      "processing": "Elaborazione link TikTok"
+    },
+    "help": {
+      "title": "Come Usare TikTok Link Share",
+      "close": "Chiudi guida aiuto",
+      "closeTooltip": "Chiudi",
+      "step1Title": "Copia Link TikTok",
+      "step1Description": "Copia il link di TikTok che hai ricevuto oppure dal pulsante condividi dell'applicazione TikTok.",
+      "step2Title": "Incolla ed Elabora",
+      "step2Description": "Incolla il link nel campo di input al centro dello schermo e attendi il completamento del processo.",
+      "step3Title": "Copia Link Pulito",
+      "step3Description": "Copia il link cliccando sul pulsante copia che appare sotto. Il link è pronto per essere usato nel browser. Incollalo semplicemente in una nuova scheda!"
+    },
+    "messages": {
+      "invalidLink": "Il link non è un URL TikTok valido dal pulsante condividi.",
+      "processingError": "Errore nell'elaborazione del link.",
+      "copySuccess": "Link copiato negli appunti",
+      "copyFailed": "Errore nella copia negli appunti",
+      "inputCleared": "Campo di input pulito",
+      "linkCleaned": "Link generato con successo. Il pulsante copia è ora disponibile.",
+      "helpOpened": "Guida aiuto aperta",
+      "helpClosed": "Guida aiuto chiusa",
+      "processingLink": "Elaborazione link TikTok..."
+    },
+    "footer": {
+      "credits": "Crediti:",
+      "copyright": "Copyright ©"
+    }
+  },
+  "de": {
+    "meta": {
+      "title": "TikTok Link Share - Tracking-Parameter entfernen | Kostenloses Tool",
+      "description": "Bereinigen Sie geteilte TikTok-Links durch Entfernen von Tracking-Parametern. Kostenloses Tool für saubere, verkürzte TikTok-URLs.",
+      "keywords": "TikTok, Link-Reiniger, URL-Verkürzer, Tracking entfernen, saubere Links, TikTok teilen"
+    },
+    "ui": {
+      "skipToContent": "Zum Hauptinhalt springen",
+      "logoAlt": "TikTok Link Share Logo",
+      "toolHeading": "TikTok Link Share Tool",
+      "helpButton": "Hilfeanleitung anzeigen",
+      "helpButtonTooltip": "Wie man dieses Tool verwendet",
+      "inputPlaceholder": "TikTok-Link hier einfügen...",
+      "inputLabel": "TikTok-Link zum Bereinigen eingeben",
+      "inputHelp": "Einen geteilten TikTok-Link einfügen und Enter drücken oder auf automatische Verarbeitung warten",
+      "clearButton": "Eingabefeld löschen",
+      "clearTooltip": "Eingabe löschen",
+      "copyButton": "Bereinigten Link in Zwischenablage kopieren",
+      "copyTooltip": "In Zwischenablage kopieren",
+      "processing": "TikTok-Link wird verarbeitet"
+    },
+    "help": {
+      "title": "Wie man TikTok Link Share verwendet",
+      "close": "Hilfeanleitung schließen",
+      "closeTooltip": "Schließen",
+      "step1Title": "TikTok-Link kopieren",
+      "step1Description": "Kopieren Sie den TikTok-Link, den Sie erhalten haben oder vom Teilen-Button der TikTok-Anwendung.",
+      "step2Title": "Einfügen und Verarbeiten",
+      "step2Description": "Fügen Sie den Link in das Eingabefeld in der Mitte des Bildschirms ein und warten Sie auf den Abschluss des Prozesses.",
+      "step3Title": "Sauberen Link kopieren",
+      "step3Description": "Kopieren Sie den Link, indem Sie auf den Kopieren-Button klicken, der darunter erscheint. Der Link ist bereit für die Verwendung im Browser. Fügen Sie ihn einfach in einen neuen Tab ein!"
+    },
+    "messages": {
+      "invalidLink": "Der Link ist keine gültige TikTok-URL vom Teilen-Button.",
+      "processingError": "Fehler beim Verarbeiten des Links.",
+      "copySuccess": "Link in Zwischenablage kopiert",
+      "copyFailed": "Fehler beim Kopieren in die Zwischenablage",
+      "inputCleared": "Eingabefeld gelöscht",
+      "linkCleaned": "Link erfolgreich bereinigt. Kopieren-Button ist jetzt verfügbar.",
+      "helpOpened": "Hilfeanleitung geöffnet",
+      "helpClosed": "Hilfeanleitung geschlossen",
+      "processingLink": "TikTok-Link wird verarbeitet..."
+    },
+    "footer": {
+      "credits": "Kredite:",
+      "copyright": "Urheberrecht ©"
+    }
+  }
+}

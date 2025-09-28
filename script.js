@@ -10,14 +10,11 @@ const CONFIG = {
         WARNING: 5000,
         SUCCESS: 2000,
         ICON_TOGGLE: 2000
-    },
-    MESSAGES: {
-        INVALID_LINK: 'The link is not a valid TikTok URL from the share button.',
-        PROCESSING_ERROR: 'Error processing the link.',
-        COPY_SUCCESS: 'link copied to clipboard',
-        COPY_FAILED: 'failed to copy to clipboard'
     }
 };
+
+// Global instances
+let localizationManager = null;
 
 // DOM Elements
 const elements = {
@@ -37,8 +34,28 @@ const elements = {
 // Initialize application
 document.addEventListener('DOMContentLoaded', initializeApp);
 
-function initializeApp() {
-    // Cache DOM elements
+async function initializeApp() {
+    try {
+        // Initialize localization first
+        localizationManager = new LocalizationManager();
+        await localizationManager.init();
+
+        // Cache DOM elements
+        cacheElements();
+
+        // Initialize event listeners
+        setupEventListeners();
+
+        console.log('TikTok Link Cleaner initialized successfully');
+    } catch (error) {
+        console.error('Application initialization failed:', error);
+        // Continue without localization if it fails
+        cacheElements();
+        setupEventListeners();
+    }
+}
+
+function cacheElements() {
     elements.input = document.getElementById('ttlink');
     elements.deleteBtn = document.getElementById('delete-btn');
     elements.copyBtn = document.getElementById('copy-btn');
@@ -50,25 +67,11 @@ function initializeApp() {
     elements.helpBtn = document.getElementById('help-btn');
     elements.helpModal = document.getElementById('help-modal');
     elements.helpCloseBtn = document.getElementById('help-close-btn');
-
-    // Initialize event listeners
-    setupEventListeners();
 }
 
-function setupEventListeners() {
-    elements.deleteBtn.addEventListener('click', handleDeleteClick);
-    elements.copyBtn.addEventListener('click', handleCopyClick);
-    elements.input.addEventListener('paste', handlePaste);
-    elements.input.addEventListener('keydown', handleKeydown);
-    elements.input.addEventListener('input', handleInputChange);
-
-    // Help modal event listeners
-    elements.helpBtn.addEventListener('click', showHelpModal);
-    elements.helpCloseBtn.addEventListener('click', hideHelpModal);
-    elements.helpModal.addEventListener('click', handleModalBackdropClick);
-
-    // Keyboard navigation for modal
-    document.addEventListener('keydown', handleModalKeydown);
+// Updated message functions to use localization
+function getLocalizedMessage(key, fallback) {
+    return localizationManager ? localizationManager.getText(`messages.${key}`) : fallback;
 }
 
 // Accessibility Functions
@@ -94,7 +97,7 @@ function handleDeleteClick() {
     clearInput();
     hideCopyButton();
     elements.input.focus();
-    announceToScreenReader('Input field cleared');
+    announceToScreenReader(getLocalizedMessage('inputCleared', 'Input field cleared'));
 }
 
 function handleCopyClick() {
@@ -107,7 +110,7 @@ function handleCopyClick() {
 function handlePaste(event) {
     const pastedText = getPastedText(event);
     hideCopyButton();
-    announceToScreenReader('Processing TikTok link...');
+    announceToScreenReader(getLocalizedMessage('processingLink', 'Processing TikTok link...'));
     processTikTokLink(pastedText);
 }
 
@@ -116,7 +119,7 @@ function handleKeydown(event) {
         event.preventDefault();
         const inputValue = elements.input.value.trim();
         if (inputValue) {
-            announceToScreenReader('Processing TikTok link...');
+            announceToScreenReader(getLocalizedMessage('processingLink', 'Processing TikTok link...'));
             processTikTokLink(inputValue);
         }
     }
@@ -147,7 +150,7 @@ function clearInput() {
 
 function showCopyButton() {
     elements.copyBtn.style.display = 'inline-block';
-    announceToScreenReader('Link cleaned successfully. Copy button is now available.');
+    announceToScreenReader(getLocalizedMessage('linkCleaned', 'Link cleaned successfully. Copy button is now available.'));
 }
 
 function hideCopyButton() {
@@ -232,7 +235,7 @@ async function tryModernClipboardAPI(text) {
     }
 
     await navigator.clipboard.writeText(text);
-    showCopyPopup(CONFIG.MESSAGES.COPY_SUCCESS, true);
+    showCopyPopup(getLocalizedMessage('copySuccess', 'Link copied to clipboard'), true);
     toggleCopyIcons();
     return true;
 }
@@ -244,7 +247,9 @@ function tryFallbackCopy(text) {
     const success = selectAndCopyText(textArea, text);
     document.body.removeChild(textArea);
 
-    const message = success ? CONFIG.MESSAGES.COPY_SUCCESS : CONFIG.MESSAGES.COPY_FAILED;
+    const message = success
+        ? getLocalizedMessage('copySuccess', 'Link copied to clipboard')
+        : getLocalizedMessage('copyFailed', 'Failed to copy to clipboard');
     showCopyPopup(message, success);
 
     if (success) {
@@ -313,7 +318,7 @@ async function processTikTokLink(pastedText) {
         handleAPIResponse(data);
     } catch (error) {
         console.error('TikTok processing failed:', error);
-        showWarningPopup(CONFIG.MESSAGES.PROCESSING_ERROR);
+        showWarningPopup(getLocalizedMessage('processingError', 'Error processing the link.'));
         elements.input.setAttribute('aria-invalid', 'true');
     } finally {
         hideLoader();
@@ -337,7 +342,7 @@ function handleAPIResponse(data) {
         showCopyButton();
         elements.input.removeAttribute('aria-invalid');
     } else {
-        showWarningPopup(CONFIG.MESSAGES.INVALID_LINK);
+        showWarningPopup(getLocalizedMessage('invalidLink', 'The link is not a valid TikTok URL from the share button.'));
         elements.input.setAttribute('aria-invalid', 'true');
     }
 }
@@ -362,7 +367,7 @@ function showHelpModal() {
     // Prevent body scroll
     document.body.style.overflow = 'hidden';
 
-    announceToScreenReader('Help guide opened');
+    announceToScreenReader(getLocalizedMessage('helpOpened', 'Help guide opened'));
 }
 
 function hideHelpModal() {
@@ -376,7 +381,7 @@ function hideHelpModal() {
         elements.helpBtn.focus();
     }, 300);
 
-    announceToScreenReader('Help guide closed');
+    announceToScreenReader(getLocalizedMessage('helpClosed', 'Help guide closed'));
 }
 
 function handleModalBackdropClick(event) {
@@ -416,4 +421,20 @@ function trapFocus(modal) {
             }
         }
     });
+}
+
+function setupEventListeners() {
+    elements.deleteBtn.addEventListener('click', handleDeleteClick);
+    elements.copyBtn.addEventListener('click', handleCopyClick);
+    elements.input.addEventListener('paste', handlePaste);
+    elements.input.addEventListener('keydown', handleKeydown);
+    elements.input.addEventListener('input', handleInputChange);
+
+    // Help modal event listeners
+    elements.helpBtn.addEventListener('click', showHelpModal);
+    elements.helpCloseBtn.addEventListener('click', hideHelpModal);
+    elements.helpModal.addEventListener('click', handleModalBackdropClick);
+
+    // Keyboard navigation for modal
+    document.addEventListener('keydown', handleModalKeydown);
 }
