@@ -80,6 +80,15 @@
   <!-- Header -->
   <header class="site-header">
     <img src="resources/logo.png" alt="TikTok Link Cleaner Logo" class="logo" width="90" height="90">
+    <button
+      id="help-btn"
+      type="button"
+      class="help-btn"
+      aria-label="Show help guide"
+      title="How to use this tool"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-question-mark-icon lucide-circle-question-mark"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+    </button>
   </header>
 
   <!-- Main Content -->
@@ -193,6 +202,73 @@
   <!-- ARIA Live Regions for Dynamic Content -->
   <div id="announcements" aria-live="polite" aria-atomic="true" class="visually-hidden"></div>
   <div id="alerts" aria-live="assertive" aria-atomic="true" class="visually-hidden"></div>
+
+  <!-- Help Guide Popup -->
+  <div
+    id="help-modal"
+    class="help-modal"
+    style="display: none;"
+    role="dialog"
+    aria-labelledby="help-title"
+    aria-describedby="help-content"
+    aria-modal="true"
+  >
+    <div class="help-modal-backdrop" aria-hidden="true"></div>
+    <div class="help-modal-content">
+      <div class="help-modal-header">
+        <h2 id="help-title">How to Use TikTok Link Cleaner</h2>
+        <button
+          id="help-close-btn"
+          type="button"
+          class="help-close-btn"
+          aria-label="Close help guide"
+          title="Close"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <div id="help-content" class="help-modal-body">
+        <ol class="help-steps">
+          <li class="help-step">
+            <div class="help-step-icon">1</div>
+            <div class="help-step-content">
+              <h3>Copy TikTok Link</h3>
+              <p>Copy the TikTok link you have received or from the share button of the TikTok application.</p>
+            </div>
+          </li>
+          <li class="help-step">
+            <div class="help-step-icon">2</div>
+            <div class="help-step-content">
+              <h3>Paste and Process</h3>
+              <p>Paste the link into the input field in the middle of the screen and wait for the process to finish.</p>
+            </div>
+          </li>
+          <li class="help-step">
+            <div class="help-step-icon">3</div>
+            <div class="help-step-content">
+              <h3>Copy Clean Link</h3>
+              <p>Copy the link by clicking on the copy button that appears below. The link is ready to be used in the browser. Just paste it in a new tab!</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 

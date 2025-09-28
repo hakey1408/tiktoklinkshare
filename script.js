@@ -28,7 +28,10 @@ const elements = {
     copyIconCheck: null,
     loader: null,
     announcements: null,
-    alerts: null
+    alerts: null,
+    helpBtn: null,
+    helpModal: null,
+    helpCloseBtn: null
 };
 
 // Initialize application
@@ -44,6 +47,9 @@ function initializeApp() {
     elements.loader = document.getElementById('loader-backdrop');
     elements.announcements = document.getElementById('announcements');
     elements.alerts = document.getElementById('alerts');
+    elements.helpBtn = document.getElementById('help-btn');
+    elements.helpModal = document.getElementById('help-modal');
+    elements.helpCloseBtn = document.getElementById('help-close-btn');
 
     // Initialize event listeners
     setupEventListeners();
@@ -55,6 +61,14 @@ function setupEventListeners() {
     elements.input.addEventListener('paste', handlePaste);
     elements.input.addEventListener('keydown', handleKeydown);
     elements.input.addEventListener('input', handleInputChange);
+
+    // Help modal event listeners
+    elements.helpBtn.addEventListener('click', showHelpModal);
+    elements.helpCloseBtn.addEventListener('click', hideHelpModal);
+    elements.helpModal.addEventListener('click', handleModalBackdropClick);
+
+    // Keyboard navigation for modal
+    document.addEventListener('keydown', handleModalKeydown);
 }
 
 // Accessibility Functions
@@ -332,4 +346,74 @@ function updateInputWithCleanedLink(cleanedUrl) {
     clearInput();
     elements.input.value = cleanedUrl;
     updateAriaLabel(elements.input, `Cleaned TikTok link: ${cleanedUrl}`);
+}
+
+// Help Modal Functions
+function showHelpModal() {
+    elements.helpModal.style.display = 'flex';
+    elements.helpModal.classList.add('show');
+
+    // Focus management for accessibility
+    elements.helpCloseBtn.focus();
+
+    // Trap focus within modal
+    trapFocus(elements.helpModal);
+
+    // Prevent body scroll
+    document.body.style.overflow = 'hidden';
+
+    announceToScreenReader('Help guide opened');
+}
+
+function hideHelpModal() {
+    elements.helpModal.classList.remove('show');
+
+    setTimeout(() => {
+        elements.helpModal.style.display = 'none';
+        document.body.style.overflow = '';
+
+        // Return focus to help button
+        elements.helpBtn.focus();
+    }, 300);
+
+    announceToScreenReader('Help guide closed');
+}
+
+function handleModalBackdropClick(event) {
+    if (event.target === elements.helpModal || event.target.classList.contains('help-modal-backdrop')) {
+        hideHelpModal();
+    }
+}
+
+function handleModalKeydown(event) {
+    if (elements.helpModal.classList.contains('show')) {
+        if (event.key === 'Escape') {
+            event.preventDefault();
+            hideHelpModal();
+        }
+    }
+}
+
+function trapFocus(modal) {
+    const focusableElements = modal.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    const firstFocusable = focusableElements[0];
+    const lastFocusable = focusableElements[focusableElements.length - 1];
+
+    modal.addEventListener('keydown', function(event) {
+        if (event.key === 'Tab') {
+            if (event.shiftKey) {
+                if (document.activeElement === firstFocusable) {
+                    event.preventDefault();
+                    lastFocusable.focus();
+                }
+            } else {
+                if (document.activeElement === lastFocusable) {
+                    event.preventDefault();
+                    firstFocusable.focus();
+                }
+            }
+        }
+    });
 }
