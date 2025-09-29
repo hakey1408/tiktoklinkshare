@@ -18,6 +18,10 @@
       "clearTooltip": "Clear input",
       "copyButton": "Copy cleaned link to clipboard",
       "copyTooltip": "Copy to clipboard",
+      "copyLabel": "Copy",
+      "openButton": "Open cleaned link in new tab",
+      "openTooltip": "Open in new tab",
+      "openLabel": "Open Link",
       "processing": "Processing TikTok link"
     },
     "help": {
@@ -29,7 +33,7 @@
       "step2Title": "Paste and Process",
       "step2Description": "Paste the link into the input field in the middle of the screen and wait for the process to finish.",
       "step3Title": "Copy Clean Link",
-      "step3Description": "Copy the link by clicking on the copy button that appears below. The link is ready to be used in the browser. Just paste it in a new tab!"
+      "step3Description": "Open the link in a new tab or copy and paste it in a new browser panel!"
     },
     "messages": {
       "invalidLink": "The link is not a valid TikTok URL from the share button.",
@@ -66,6 +70,10 @@
       "clearTooltip": "Limpiar entrada",
       "copyButton": "Copiar enlace limpio al portapapeles",
       "copyTooltip": "Copiar al portapapeles",
+      "copyLabel": "Copiar",
+      "openButton": "Abrir enlace limpio en nueva pestaña",
+      "openTooltip": "Abrir en nueva pestaña",
+      "openLabel": "Abrir Enlace",
       "processing": "Procesando enlace de TikTok"
     },
     "help": {
@@ -77,7 +85,7 @@
       "step2Title": "Pegar y Procesar",
       "step2Description": "Pega el enlace en el campo de entrada en el centro de la pantalla y espera a que termine el proceso.",
       "step3Title": "Copiar Enlace Limpio",
-      "step3Description": "Copia el enlace haciendo clic en el botón copiar que aparece abajo. ¡El enlace está listo para usar en el navegador. Solo pégalo en una nueva pestaña!"
+      "step3Description": "¡Abre el enlace en una nueva pestaña o cópialo y pégalo en un nuevo panel del navegador!"
     },
     "messages": {
       "invalidLink": "El enlace no es una URL válida de TikTok del botón de compartir.",
@@ -114,6 +122,10 @@
       "clearTooltip": "Effacer la saisie",
       "copyButton": "Copier le lien nettoyé dans le presse-papiers",
       "copyTooltip": "Copier dans le presse-papiers",
+      "copyLabel": "Copier",
+      "openButton": "Ouvrir le lien nettoyé dans un nouvel onglet",
+      "openTooltip": "Ouvrir dans un nouvel onglet",
+      "openLabel": "Ouvrir le Lien",
       "processing": "Traitement du lien TikTok"
     },
     "help": {
@@ -125,7 +137,7 @@
       "step2Title": "Coller et Traiter",
       "step2Description": "Collez le lien dans le champ de saisie au centre de l'écran et attendez la fin du processus.",
       "step3Title": "Copier le Lien Propre",
-      "step3Description": "Copiez le lien en cliquant sur le bouton copier qui apparaît en dessous. Le lien est prêt à être utilisé dans le navigateur. Collez-le simplement dans un nouvel onglet!"
+      "step3Description": "Ouvrez le lien dans un nouvel onglet ou copiez et collez-le dans un nouveau panneau de navigateur!"
     },
     "messages": {
       "invalidLink": "Le lien n'est pas une URL TikTok valide du bouton de partage.",
@@ -162,6 +174,10 @@
       "clearTooltip": "Pulisci input",
       "copyButton": "Copia link condivisible negli appunti",
       "copyTooltip": "Copia negli appunti",
+      "copyLabel": "Copia",
+      "openButton": "Apri link pulito in nuova scheda",
+      "openTooltip": "Apri in nuova scheda",
+      "openLabel": "Apri Link",
       "processing": "Elaborazione link TikTok"
     },
     "help": {
@@ -173,7 +189,7 @@
       "step2Title": "Incolla ed Elabora",
       "step2Description": "Incolla il link nel campo di input al centro dello schermo e attendi il completamento del processo.",
       "step3Title": "Copia Link Pulito",
-      "step3Description": "Copia il link cliccando sul pulsante copia che appare sotto. Il link è pronto per essere usato nel browser. Incollalo semplicemente in una nuova scheda!"
+      "step3Description": "Apri il link in una nuova scheda o copialo e incollalo in un nuovo pannello del browser!"
     },
     "messages": {
       "invalidLink": "Il link non è un URL TikTok valido dal pulsante condividi.",
@@ -210,6 +226,10 @@
       "clearTooltip": "Eingabe löschen",
       "copyButton": "Bereinigten Link in Zwischenablage kopieren",
       "copyTooltip": "In Zwischenablage kopieren",
+      "copyLabel": "Kopieren",
+      "openButton": "Bereinigten Link in neuem Tab öffnen",
+      "openTooltip": "In neuem Tab öffnen",
+      "openLabel": "Link Öffnen",
       "processing": "TikTok-Link wird verarbeitet"
     },
     "help": {

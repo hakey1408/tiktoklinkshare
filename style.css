@@ -47,9 +47,13 @@ body, html {
   border: 0;
 }
 
+.hidden {
+  display: none !important;
+}
+
 .skip-link {
   position: absolute;
-  top: -40px;
+  top: -40px;  /* Hidden above viewport */
   left: 6px;
   background: var(--primary-blue);
   color: white;
@@ -61,8 +65,9 @@ body, html {
 }
 
 .skip-link:focus {
-  top: 6px;
+  top: 6px;  /* Becomes visible when focused */
 }
+
 
 /* Reduced motion preferences */
 @media (prefers-reduced-motion: reduce) {
@@ -194,6 +199,25 @@ body, html {
   gap: var(--spacing-sm);
 }
 
+.action-buttons {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.action-buttons.hidden {
+  display: none
+}
+
+.button-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-dark);
+  margin-left: var(--spacing-xs);
+  margin-right: var(--spacing-md);
+  user-select: none;
+}
+
 .link-form {
   width: 100%;
 }
@@ -275,24 +299,27 @@ body, html {
   outline-offset: 2px;
 }
 
-.copy-btn {
+.copy-btn, .open-btn {
   background: var(--primary-blue);
   border: none;
   color: white;
   cursor: pointer;
   border-radius: var(--radius-md);
-  width: 56px;
-  height: 56px;
+  width: auto;
   min-width: 56px;
+  height: 56px;
   min-height: 56px;
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: var(--spacing-xs);
+  padding: 0 var(--spacing-md);
   box-shadow: var(--shadow-md);
   transition: all 0.3s ease;
 }
 
-.copy-btn:hover, .copy-btn:focus {
+.copy-btn:hover, .copy-btn:focus,
+.open-btn:hover, .open-btn:focus {
   background: #0052cc;
   transform: translateY(-2px) scale(1.05);
   box-shadow: var(--shadow-lg);
@@ -300,13 +327,24 @@ body, html {
   outline-offset: 2px;
 }
 
-.copy-btn svg {
+.copy-btn svg, .open-btn svg {
   width: 24px;
   height: 24px;
+  flex-shrink: 0;
 }
 
 .copy-btn svg.hide {
   display: none;
+}
+
+.button-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: white;
+  user-select: none;
+  line-height: 1;
+  display: flex;
+  align-items: center;
 }
 
 /* Popups */
@@ -480,14 +518,14 @@ body, html {
     min-height: 64px;
   }
 
-  .copy-btn {
-    width: 64px;
+  .copy-btn, .open-btn {
     height: 64px;
+    min-height: 64px;
   }
 
-  .copy-btn svg {
-    width: 28px;
-    height: 28px;
+  .copy-btn svg, .open-btn svg {
+    width: 24px;
+    height: 24px;
   }
 
   .delete-btn {

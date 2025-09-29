@@ -21,6 +21,8 @@ const elements = {
     input: null,
     deleteBtn: null,
     copyBtn: null,
+    openBtn: null,
+    actionButtons: null,
     copyIcon: null,
     copyIconCheck: null,
     loader: null,
@@ -59,7 +61,9 @@ function cacheElements() {
     elements.input = document.getElementById('ttlink');
     elements.deleteBtn = document.getElementById('delete-btn');
     elements.copyBtn = document.getElementById('copy-btn');
+    elements.openBtn = document.getElementById('open-btn');
     elements.copyIcon = document.getElementById('copy-icon');
+    elements.actionButtons = document.getElementById('action-buttons');
     elements.copyIconCheck = document.getElementById('copy-icon-check');
     elements.loader = document.getElementById('loader-backdrop');
     elements.announcements = document.getElementById('announcements');
@@ -95,7 +99,7 @@ function updateAriaLabel(element, label) {
 // Event Handlers
 function handleDeleteClick() {
     clearInput();
-    hideCopyButton();
+    hideActionButtons();
     elements.input.focus();
     announceToScreenReader(getLocalizedMessage('inputCleared', 'Input field cleared'));
 }
@@ -107,9 +111,17 @@ function handleCopyClick() {
     }
 }
 
+function handleOpenClick() {
+    const inputValue = elements.input.value.trim();
+    if (inputValue) {
+        window.open(inputValue, '_blank', 'noopener,noreferrer');
+        announceToScreenReader(getLocalizedMessage('linkOpened', 'Link opened in new tab'));
+    }
+}
+
 function handlePaste(event) {
     const pastedText = getPastedText(event);
-    hideCopyButton();
+    hideActionButtons();
     announceToScreenReader(getLocalizedMessage('processingLink', 'Processing TikTok link...'));
     processTikTokLink(pastedText);
 }
@@ -128,7 +140,7 @@ function handleKeydown(event) {
 function handleInputChange() {
     // Hide copy button when user modifies input
     if (elements.copyBtn.style.display !== 'none') {
-        hideCopyButton();
+        hideActionButtons();
     }
 }
 
@@ -148,22 +160,22 @@ function clearInput() {
     elements.input.removeAttribute('aria-invalid');
 }
 
-function showCopyButton() {
-    elements.copyBtn.style.display = 'inline-block';
-    announceToScreenReader(getLocalizedMessage('linkCleaned', 'Link cleaned successfully. Copy button is now available.'));
+function showActionButtons() {
+    elements.actionButtons.classList.remove('hidden');
+    announceToScreenReader(getLocalizedMessage('linkCleaned', 'Link cleaned successfully. Copy and open buttons are now available.'));
 }
 
-function hideCopyButton() {
-    elements.copyBtn.style.display = 'none';
+function hideActionButtons() {
+    elements.actionButtons.classList.add('hidden');
 }
 
 function showLoader() {
-    elements.loader.style.display = 'flex';
+    elements.loader.classList.remove('hidden');
     elements.loader.setAttribute('aria-hidden', 'false');
 }
 
 function hideLoader() {
-    elements.loader.style.display = 'none';
+    elements.loader.classList.add('hidden');
     elements.loader.setAttribute('aria-hidden', 'true');
 }
 
@@ -339,7 +351,7 @@ async function fetchTikTokData(url) {
 function handleAPIResponse(data) {
     if (data.status === 301 && data['purified-location']) {
         updateInputWithCleanedLink(data['purified-location']);
-        showCopyButton();
+        showActionButtons();
         elements.input.removeAttribute('aria-invalid');
     } else {
         showWarningPopup(getLocalizedMessage('invalidLink', 'The link is not a valid TikTok URL from the share button.'));
@@ -355,7 +367,7 @@ function updateInputWithCleanedLink(cleanedUrl) {
 
 // Help Modal Functions
 function showHelpModal() {
-    elements.helpModal.style.display = 'flex';
+    elements.helpModal.classList.remove('hidden');
     elements.helpModal.classList.add('show');
 
     // Focus management for accessibility
@@ -374,7 +386,7 @@ function hideHelpModal() {
     elements.helpModal.classList.remove('show');
 
     setTimeout(() => {
-        elements.helpModal.style.display = 'none';
+        elements.helpModal.classList.add('hidden');
         document.body.style.overflow = '';
 
         // Return focus to help button
@@ -426,6 +438,7 @@ function trapFocus(modal) {
 function setupEventListeners() {
     elements.deleteBtn.addEventListener('click', handleDeleteClick);
     elements.copyBtn.addEventListener('click', handleCopyClick);
+    elements.openBtn.addEventListener('click', handleOpenClick);
     elements.input.addEventListener('paste', handlePaste);
     elements.input.addEventListener('keydown', handleKeydown);
     elements.input.addEventListener('input', handleInputChange);
