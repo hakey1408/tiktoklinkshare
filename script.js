@@ -10,7 +10,13 @@ const CONFIG = {
         WARNING: 5000,
         SUCCESS: 2000,
         ICON_TOGGLE: 2000
-    }
+    },
+    STORAGE_KEYS: {
+        LANGUAGE: 'tiktok-cleaner-language',
+        THEME: 'tiktok-cleaner-theme',
+        RECENT_LINKS: 'tiktok-cleaner-recent-links'
+    },
+    MAX_RECENT_LINKS: 10
 };
 
 // Global instances
@@ -30,7 +36,9 @@ const elements = {
     alerts: null,
     helpBtn: null,
     helpModal: null,
-    helpCloseBtn: null
+    helpCloseBtn: null,
+    languageButton: null,
+    languageOptions: null
 };
 
 // Initialize application
@@ -71,6 +79,8 @@ function cacheElements() {
     elements.helpBtn = document.getElementById('help-btn');
     elements.helpModal = document.getElementById('help-modal');
     elements.helpCloseBtn = document.getElementById('help-close-btn');
+    elements.languageButton = document.getElementById('language-select');
+    elements.languageOptions = document.getElementById('language-options');
 }
 
 // Updated message functions to use localization
@@ -350,7 +360,13 @@ async function fetchTikTokData(url) {
 
 function handleAPIResponse(data) {
     if (data.status === 301 && data['purified-location']) {
-        updateInputWithCleanedLink(data['purified-location']);
+        const originalUrl = elements.input.value.trim();
+        const cleanedUrl = data['purified-location'];
+
+        // Save to recent links
+        saveRecentLink(originalUrl, cleanedUrl);
+
+        updateInputWithCleanedLink(cleanedUrl);
         showActionButtons();
         elements.input.removeAttribute('aria-invalid');
     } else {
@@ -435,6 +451,305 @@ function trapFocus(modal) {
     });
 }
 
+// Language Selector Functions
+function initializeLanguageSelector() {
+    if (!elements.languageButton || !elements.languageOptions) {
+        return;
+    }
+
+    // Set initial state based on current language
+    updateLanguageDisplay();
+
+    // Add event listeners
+    elements.languageButton.addEventListener('click', toggleLanguageDropdown);
+    elements.languageButton.addEventListener('keydown', handleLanguageButtonKeydown);
+
+    // Add click listeners to language options
+    const languageOptions = elements.languageOptions.querySelectorAll('.language-option');
+    languageOptions.forEach(option => {
+        option.addEventListener('click', () => handleLanguageSelection(option));
+        option.addEventListener('keydown', (event) => handleLanguageOptionKeydown(event, option));
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', handleOutsideClick);
+}
+
+function toggleLanguageDropdown() {
+    const isExpanded = elements.languageButton.getAttribute('aria-expanded') === 'true';
+
+    if (isExpanded) {
+        closeLanguageDropdown();
+    } else {
+        openLanguageDropdown();
+    }
+}
+
+function openLanguageDropdown() {
+    elements.languageButton.setAttribute('aria-expanded', 'true');
+    elements.languageOptions.classList.remove('hidden');
+
+    // Focus first option
+    const firstOption = elements.languageOptions.querySelector('.language-option');
+    if (firstOption) {
+        firstOption.focus();
+    }
+}
+
+function closeLanguageDropdown() {
+    elements.languageButton.setAttribute('aria-expanded', 'false');
+    elements.languageOptions.classList.add('hidden');
+    elements.languageButton.focus();
+}
+
+function handleLanguageButtonKeydown(event) {
+    switch (event.key) {
+        case 'Enter':
+        case ' ':
+        case 'ArrowDown':
+            event.preventDefault();
+            openLanguageDropdown();
+            break;
+        case 'ArrowUp':
+            event.preventDefault();
+            openLanguageDropdown();
+            // Focus last option
+            const lastOption = elements.languageOptions.querySelector('.language-option:last-child');
+            if (lastOption) {
+                lastOption.focus();
+            }
+            break;
+    }
+}
+
+function handleLanguageOptionKeydown(event, option) {
+    switch (event.key) {
+        case 'Enter':
+        case ' ':
+            event.preventDefault();
+            handleLanguageSelection(option);
+            break;
+        case 'ArrowDown':
+            event.preventDefault();
+            focusNextLanguageOption(option);
+            break;
+        case 'ArrowUp':
+            event.preventDefault();
+            focusPreviousLanguageOption(option);
+            break;
+        case 'Escape':
+            event.preventDefault();
+            closeLanguageDropdown();
+            break;
+    }
+}
+
+function focusNextLanguageOption(currentOption) {
+    const nextOption = currentOption.nextElementSibling;
+    if (nextOption) {
+        nextOption.focus();
+    } else {
+        // Loop to first option
+        const firstOption = elements.languageOptions.querySelector('.language-option');
+        if (firstOption) {
+            firstOption.focus();
+        }
+    }
+}
+
+function focusPreviousLanguageOption(currentOption) {
+    const previousOption = currentOption.previousElementSibling;
+    if (previousOption) {
+        previousOption.focus();
+    } else {
+        // Loop to last option
+        const lastOption = elements.languageOptions.querySelector('.language-option:last-child');
+        if (lastOption) {
+            lastOption.focus();
+        }
+    }
+}
+
+async function handleLanguageSelection(option) {
+    const languageCode = option.getAttribute('data-lang');
+
+    if (!languageCode || !localizationManager) {
+        return;
+    }
+
+    // Update selected state
+    elements.languageOptions.querySelectorAll('.language-option').forEach(opt => {
+        opt.setAttribute('aria-selected', 'false');
+    });
+    option.setAttribute('aria-selected', 'true');
+
+    // Close dropdown
+    closeLanguageDropdown();
+
+    // Change language
+    try {
+        await localizationManager.setLanguage(languageCode);
+
+        // Save language preference
+        saveToLocalStorage(CONFIG.STORAGE_KEYS.LANGUAGE, languageCode);
+
+        updateLanguageDisplay();
+        announceToScreenReader(`Language changed to ${option.querySelector('.language-name').textContent}`);
+    } catch (error) {
+        console.error('Failed to change language:', error);
+    }
+}
+
+function updateLanguageDisplay() {
+    if (!localizationManager || !elements.languageButton) {
+        return;
+    }
+
+    const currentLang = localizationManager.currentLanguage;
+    const langFlagMap = {
+        'en': '🇺🇸',
+        'es': '🇪🇸',
+        'fr': '🇫🇷',
+        'it': '🇮🇹',
+        'de': '🇩🇪'
+    };
+
+    // Update button display
+    const flagElement = elements.languageButton.querySelector('.language-flag');
+    const nameElement = elements.languageButton.querySelector('.language-name');
+
+    if (flagElement && nameElement) {
+        flagElement.textContent = langFlagMap[currentLang] || '🇺🇸';
+        nameElement.textContent = localizationManager.getText(`footer.languages.${currentLang}`) || 'English';
+    }
+
+    // Update selected option in dropdown
+    elements.languageOptions.querySelectorAll('.language-option').forEach(option => {
+        const isSelected = option.getAttribute('data-lang') === currentLang;
+        option.setAttribute('aria-selected', isSelected.toString());
+    });
+}
+
+function handleOutsideClick(event) {
+    if (!elements.languageButton || !elements.languageOptions) {
+        return;
+    }
+
+    const isClickInsideSelector = elements.languageButton.contains(event.target) ||
+                                  elements.languageOptions.contains(event.target);
+
+    if (!isClickInsideSelector && elements.languageButton.getAttribute('aria-expanded') === 'true') {
+        closeLanguageDropdown();
+    }
+}
+
+// Storage Functions
+function saveToLocalStorage(key, value) {
+    try {
+        localStorage.setItem(key, JSON.stringify(value));
+    } catch (error) {
+        console.warn('Failed to save to localStorage:', error);
+    }
+}
+
+function loadFromLocalStorage(key, defaultValue = null) {
+    try {
+        const item = localStorage.getItem(key);
+        return item ? JSON.parse(item) : defaultValue;
+    } catch (error) {
+        console.warn('Failed to load from localStorage:', error);
+        return defaultValue;
+    }
+}
+
+function saveRecentLink(originalUrl, cleanedUrl) {
+    const recentLinks = loadFromLocalStorage(CONFIG.STORAGE_KEYS.RECENT_LINKS, []);
+    const linkEntry = {
+        id: Date.now(),
+        originalUrl,
+        cleanedUrl,
+        timestamp: new Date().toISOString()
+    };
+
+    // Remove duplicate if exists
+    const filtered = recentLinks.filter(link => link.cleanedUrl !== cleanedUrl);
+
+    // Add new link at the beginning
+    filtered.unshift(linkEntry);
+
+    // Keep only the latest MAX_RECENT_LINKS
+    const trimmed = filtered.slice(0, CONFIG.MAX_RECENT_LINKS);
+
+    saveToLocalStorage(CONFIG.STORAGE_KEYS.RECENT_LINKS, trimmed);
+}
+
+function getRecentLinks() {
+    return loadFromLocalStorage(CONFIG.STORAGE_KEYS.RECENT_LINKS, []);
+}
+
+// Enhanced Link Validation
+function validateTikTokUrl(url) {
+    const tikTokPatterns = [
+        /^https?:\/\/(www\.)?tiktok\.com\/@[\w.-]+\/video\/\d+/,
+        /^https?:\/\/(www\.)?tiktok\.com\/t\/[\w\d]+/,
+        /^https?:\/\/vm\.tiktok\.com\/[\w\d]+/,
+        /^https?:\/\/vt\.tiktok\.com\/[\w\d]+/,
+        /^https?:\/\/m\.tiktok\.com/
+    ];
+
+    return tikTokPatterns.some(pattern => pattern.test(url));
+}
+
+// Keyboard Shortcuts
+function setupKeyboardShortcuts() {
+    document.addEventListener('keydown', (event) => {
+        // Ctrl/Cmd + V for paste (if input is focused)
+        if ((event.ctrlKey || event.metaKey) && event.key === 'v' && document.activeElement === elements.input) {
+            // Let default paste behavior happen, but prepare for processing
+            setTimeout(() => {
+                const value = elements.input.value.trim();
+                if (value && validateTikTokUrl(value)) {
+                    processTikTokLink(value);
+                }
+            }, 50);
+        }
+
+        // Ctrl/Cmd + C for copy (when copy button is visible)
+        if ((event.ctrlKey || event.metaKey) && event.key === 'c' && !elements.actionButtons.classList.contains('hidden')) {
+            event.preventDefault();
+            handleCopyClick();
+        }
+
+        // Escape to clear input and hide buttons
+        if (event.key === 'Escape' && document.activeElement === elements.input) {
+            event.preventDefault();
+            handleDeleteClick();
+        }
+
+        // Enter to process link
+        if (event.key === 'Enter' && document.activeElement === elements.input) {
+            event.preventDefault();
+            const value = elements.input.value.trim();
+            if (value) {
+                processTikTokLink(value);
+            }
+        }
+    });
+}
+
+// URL Processing with validation
+function preprocessTikTokUrl(url) {
+    // Remove whitespace
+    url = url.trim();
+
+    // Add https if missing
+    if (url.match(/^(tiktok\.com|vm\.tiktok\.com|vt\.tiktok\.com|m\.tiktok\.com)/)) {
+        url = 'https://' + url;
+    }
+
+    return url;
+}
+
 function setupEventListeners() {
     elements.deleteBtn.addEventListener('click', handleDeleteClick);
     elements.copyBtn.addEventListener('click', handleCopyClick);
@@ -450,4 +765,10 @@ function setupEventListeners() {
 
     // Keyboard navigation for modal
     document.addEventListener('keydown', handleModalKeydown);
+
+    // Initialize language selector
+    initializeLanguageSelector();
+
+    // Setup keyboard shortcuts
+    setupKeyboardShortcuts();
 }

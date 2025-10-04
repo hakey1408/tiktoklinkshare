@@ -408,6 +408,141 @@ body, html {
   box-shadow: 0 -2px 16px rgba(0, 0, 0, 0.05);
 }
 
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xs);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-credits {
+  margin: 0;
+}
+
+.footer-credits a {
+  color: var(--primary-blue);
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.footer-credits a:hover {
+  opacity: 0.7;
+}
+
+/* Language Selector */
+.language-selector {
+  position: relative;
+}
+
+.language-label {
+  display: block;
+  font-size: 0.75rem;
+  margin-bottom: 4px;
+  color: var(--text-light);
+  font-weight: 600;
+}
+
+.language-dropdown {
+  position: relative;
+}
+
+.language-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-dark);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 140px;
+  text-align: left;
+  backdrop-filter: blur(10px);
+}
+
+.language-button:hover {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: var(--primary-blue);
+  transform: translateY(-1px);
+}
+
+.language-button:focus {
+  outline: 2px solid var(--primary-blue);
+  outline-offset: 2px;
+}
+
+.language-flag {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.language-name {
+  flex: 1;
+}
+
+.language-arrow {
+  transition: transform 0.2s ease;
+  color: var(--text-light);
+}
+
+.language-button[aria-expanded="true"] .language-arrow {
+  transform: rotate(180deg);
+}
+
+.language-options {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  box-shadow: var(--shadow-md);
+  margin-bottom: 4px;
+  padding: 4px 0;
+  list-style: none;
+  z-index: 1000;
+  backdrop-filter: blur(20px);
+  overflow: hidden;
+}
+
+.language-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-dark);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.language-option:hover {
+  background: rgba(0, 102, 255, 0.1);
+}
+
+.language-option[aria-selected="true"] {
+  background: rgba(0, 102, 255, 0.15);
+  color: var(--primary-blue);
+  font-weight: 600;
+}
+
+.language-option .language-flag {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.language-option .language-name {
+  flex: 1;
+}
+
 /* Loader */
 .loader-backdrop {
   position: fixed;
@@ -489,6 +624,15 @@ body, html {
   .footer {
     font-size: 0.95rem;
     padding: var(--spacing-md);
+  }
+
+  .footer-content {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .language-selector {
+    margin-left: auto;
   }
 
   .help-modal-header h2 {

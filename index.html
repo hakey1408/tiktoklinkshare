@@ -295,11 +295,55 @@
 
   <!-- Footer -->
   <footer class="footer" role="contentinfo">
-    <p>
-      <span data-i18n="footer.credits">Credits:</span>
-      <a href="https://hakey1408.github.io" rel="author" aria-label="Emanuele Tomaello's profile">Emanuele Tomaello</a>.
-      <span data-i18n="footer.copyright">Copyright ©</span> <time datetime="2025">2025</time>
-    </p>
+    <div class="footer-content">
+      <p class="footer-credits">
+        <span data-i18n="footer.credits">Credits:</span>
+        <a href="https://hakey1408.github.io" rel="author" aria-label="Emanuele Tomaello's profile">Emanuele Tomaello</a>.
+        <span data-i18n="footer.copyright">Copyright ©</span> <time datetime="2025">2025</time>
+      </p>
+
+      <div class="language-selector">
+        <label for="language-select" class="language-label" data-i18n="footer.languageSelector">Language</label>
+        <div class="language-dropdown">
+          <button
+            id="language-select"
+            class="language-button"
+            type="button"
+            aria-haspopup="listbox"
+            aria-expanded="false"
+            aria-label="Select language"
+          >
+            <span class="language-flag">🇺🇸</span>
+            <span class="language-name" data-i18n="footer.languages.en">English</span>
+            <svg class="language-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6,9 12,15 18,9"></polyline>
+            </svg>
+          </button>
+          <ul id="language-options" class="language-options hidden" role="listbox" aria-labelledby="language-select">
+            <li class="language-option" role="option" data-lang="en" aria-selected="true">
+              <span class="language-flag">🇺🇸</span>
+              <span class="language-name" data-i18n="footer.languages.en">English</span>
+            </li>
+            <li class="language-option" role="option" data-lang="es" aria-selected="false">
+              <span class="language-flag">🇪🇸</span>
+              <span class="language-name" data-i18n="footer.languages.es">Español</span>
+            </li>
+            <li class="language-option" role="option" data-lang="fr" aria-selected="false">
+              <span class="language-flag">🇫🇷</span>
+              <span class="language-name" data-i18n="footer.languages.fr">Français</span>
+            </li>
+            <li class="language-option" role="option" data-lang="it" aria-selected="false">
+              <span class="language-flag">🇮🇹</span>
+              <span class="language-name" data-i18n="footer.languages.it">Italiano</span>
+            </li>
+            <li class="language-option" role="option" data-lang="de" aria-selected="false">
+              <span class="language-flag">🇩🇪</span>
+              <span class="language-name" data-i18n="footer.languages.de">Deutsch</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </footer>
 </body>
 </html>

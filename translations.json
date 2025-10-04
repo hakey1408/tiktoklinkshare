@@ -48,7 +48,15 @@
     },
     "footer": {
       "credits": "Credits:",
-      "copyright": "Copyright ©"
+      "copyright": "Copyright ©",
+      "languageSelector": "Language",
+      "languages": {
+        "en": "English",
+        "es": "Español",
+        "fr": "Français",
+        "it": "Italiano",
+        "de": "Deutsch"
+      }
     }
   },
   "es": {
@@ -100,7 +108,15 @@
     },
     "footer": {
       "credits": "Créditos:",
-      "copyright": "Derechos de autor ©"
+      "copyright": "Derechos de autor ©",
+      "languageSelector": "Idioma",
+      "languages": {
+        "en": "Inglés",
+        "es": "Español",
+        "fr": "Francés",
+        "it": "Italiano",
+        "de": "Alemán"
+      }
     }
   },
   "fr": {
@@ -152,7 +168,15 @@
     },
     "footer": {
       "credits": "Crédits:",
-      "copyright": "Droits d'auteur ©"
+      "copyright": "Droits d'auteur ©",
+      "languageSelector": "Langue",
+      "languages": {
+        "en": "Anglais",
+        "es": "Espagnol",
+        "fr": "Français",
+        "it": "Italien",
+        "de": "Allemand"
+      }
     }
   },
   "it": {
@@ -204,7 +228,15 @@
     },
     "footer": {
       "credits": "Crediti:",
-      "copyright": "Copyright ©"
+      "copyright": "Copyright ©",
+      "languageSelector": "Lingua",
+      "languages": {
+        "en": "Inglese",
+        "es": "Spagnolo",
+        "fr": "Francese",
+        "it": "Italiano",
+        "de": "Tedesco"
+      }
     }
   },
   "de": {
@@ -256,7 +288,15 @@
     },
     "footer": {
       "credits": "Kredite:",
-      "copyright": "Urheberrecht ©"
+      "copyright": "Urheberrecht ©",
+      "languageSelector": "Sprache",
+      "languages": {
+        "en": "Englisch",
+        "es": "Spanisch",
+        "fr": "Französisch",
+        "it": "Italienisch",
+        "de": "Deutsch"
+      }
     }
   }
 }
