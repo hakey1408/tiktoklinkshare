@@ -38,7 +38,11 @@ const elements = {
     helpModal: null,
     helpCloseBtn: null,
     languageButton: null,
-    languageOptions: null
+    languageOptions: null,
+    linkPreview: null,
+    previewImage: null,
+    previewLoader: null,
+    previewError: null
 };
 
 // Initialize application
@@ -81,6 +85,10 @@ function cacheElements() {
     elements.helpCloseBtn = document.getElementById('help-close-btn');
     elements.languageButton = document.getElementById('language-select');
     elements.languageOptions = document.getElementById('language-options');
+    elements.linkPreview = document.getElementById('link-preview');
+    elements.previewImage = document.getElementById('preview-image');
+    elements.previewLoader = document.getElementById('preview-loader');
+    elements.previewError = document.getElementById('preview-error');
 }
 
 // Updated message functions to use localization
@@ -177,6 +185,7 @@ function showActionButtons() {
 
 function hideActionButtons() {
     elements.actionButtons.classList.add('hidden');
+    hideLinkPreview();
 }
 
 function showLoader() {
@@ -336,7 +345,8 @@ async function processTikTokLink(pastedText) {
     showLoader();
 
     try {
-        const data = await fetchTikTokData(pastedText);
+        const response = await fetchTikTokData(pastedText);
+        const data = deobfuscateResponse(response.data)
         handleAPIResponse(data);
     } catch (error) {
         console.error('TikTok processing failed:', error);
@@ -359,15 +369,20 @@ async function fetchTikTokData(url) {
 }
 
 function handleAPIResponse(data) {
-    if (data.status === 301 && data['purified-location']) {
-        const originalUrl = elements.input.value.trim();
+    if (data['purified-location']) {
         const cleanedUrl = data['purified-location'];
+        const creator = data['creator'];
+        const previewImage = data['og_image'];
 
         // Save to recent links
-        saveRecentLink(originalUrl, cleanedUrl);
+        saveRecentLink(cleanedUrl, creator, previewImage);
 
         updateInputWithCleanedLink(cleanedUrl);
         showActionButtons();
+
+        // Show preview image for the cleaned URL
+        showLinkPreview(creator, previewImage);
+
         elements.input.removeAttribute('aria-invalid');
     } else {
         showWarningPopup(getLocalizedMessage('invalidLink', 'The link is not a valid TikTok URL from the share button.'));
@@ -379,6 +394,40 @@ function updateInputWithCleanedLink(cleanedUrl) {
     clearInput();
     elements.input.value = cleanedUrl;
     updateAriaLabel(elements.input, `Cleaned TikTok link: ${cleanedUrl}`);
+}
+
+function deobfuscateResponse(obfuscatedData) {
+    try {
+        // Reverse character substitution
+        const charMap = {
+            'z': 'a', 'y': 'b', 'x': 'c', 'w': 'd', 'v': 'e', 'u': 'f', 't': 'g', 's': 'h', 'r': 'i', 'q': 'j',
+            'p': 'k', 'o': 'l', 'n': 'm', 'm': 'n', 'l': 'o', 'k': 'p', 'j': 'q', 'i': 'r', 'h': 's', 'g': 't',
+            'f': 'u', 'e': 'v', 'd': 'w', 'c': 'x', 'b': 'y', 'a': 'z',
+            'Z': 'A', 'Y': 'B', 'X': 'C', 'W': 'D', 'V': 'E', 'U': 'F', 'T': 'G', 'S': 'H', 'R': 'I', 'Q': 'J',
+            'P': 'K', 'O': 'L', 'N': 'M', 'M': 'N', 'L': 'O', 'K': 'P', 'J': 'Q', 'I': 'R', 'H': 'S', 'G': 'T',
+            'F': 'U', 'E': 'V', 'D': 'W', 'C': 'X', 'B': 'Y', 'A': 'Z',
+            '9': '0', '8': '1', '7': '2', '6': '3', '5': '4', '4': '5', '3': '6', '2': '7', '1': '8', '0': '9',
+            '-': '+', '_': '/'
+        };
+
+        // Apply character substitution
+        let unsubstituted = '';
+        for (let char of obfuscatedData) {
+            unsubstituted += charMap[char] || char;
+        }
+
+        // Reverse the string
+        const unreversed = unsubstituted.split('').reverse().join('');
+
+        // Base64 decode
+        const decoded = atob(unreversed);
+
+        // Parse JSON
+        return JSON.parse(decoded);
+    } catch (error) {
+        console.error('Deobfuscation failed:', error);
+        throw new Error('Failed to decode response data');
+    }
 }
 
 // Help Modal Functions
@@ -662,12 +711,13 @@ function loadFromLocalStorage(key, defaultValue = null) {
     }
 }
 
-function saveRecentLink(originalUrl, cleanedUrl) {
+function saveRecentLink(cleanedUrl, creator, previewImage) {
     const recentLinks = loadFromLocalStorage(CONFIG.STORAGE_KEYS.RECENT_LINKS, []);
     const linkEntry = {
         id: Date.now(),
-        originalUrl,
-        cleanedUrl,
+        link: cleanedUrl,
+        creator: creator,
+        previewImage: previewImage,
         timestamp: new Date().toISOString()
     };
 
@@ -751,19 +801,46 @@ function preprocessTikTokUrl(url) {
 }
 
 function setupEventListeners() {
-    elements.deleteBtn.addEventListener('click', handleDeleteClick);
-    elements.copyBtn.addEventListener('click', handleCopyClick);
-    elements.openBtn.addEventListener('click', handleOpenClick);
-    elements.input.addEventListener('paste', handlePaste);
-    elements.input.addEventListener('keydown', handleKeydown);
-    elements.input.addEventListener('input', handleInputChange);
+    // Input events
+    if (elements.input) {
+        elements.input.addEventListener('paste', handlePaste);
+        elements.input.addEventListener('keydown', handleKeydown);
+        elements.input.addEventListener('input', handleInputChange);
+    }
 
-    // Help modal event listeners
-    elements.helpBtn.addEventListener('click', showHelpModal);
-    elements.helpCloseBtn.addEventListener('click', hideHelpModal);
-    elements.helpModal.addEventListener('click', handleModalBackdropClick);
+    // Button events
+    if (elements.deleteBtn) {
+        elements.deleteBtn.addEventListener('click', handleDeleteClick);
+    }
 
-    // Keyboard navigation for modal
+    if (elements.copyBtn) {
+        elements.copyBtn.addEventListener('click', handleCopyClick);
+    }
+
+    if (elements.openBtn) {
+        elements.openBtn.addEventListener('click', handleOpenClick);
+    }
+
+    // Link preview click event
+    if (elements.linkPreview) {
+        elements.linkPreview.addEventListener('click', handleOpenClick);
+        elements.linkPreview.style.cursor = 'pointer';
+    }
+
+    // Help modal events
+    if (elements.helpBtn) {
+        elements.helpBtn.addEventListener('click', showHelpModal);
+    }
+
+    if (elements.helpCloseBtn) {
+        elements.helpCloseBtn.addEventListener('click', hideHelpModal);
+    }
+
+    if (elements.helpModal) {
+        elements.helpModal.addEventListener('click', handleModalBackdropClick);
+    }
+
+    // Global keyboard events
     document.addEventListener('keydown', handleModalKeydown);
 
     // Initialize language selector
@@ -771,4 +848,107 @@ function setupEventListeners() {
 
     // Setup keyboard shortcuts
     setupKeyboardShortcuts();
+}
+
+// Link Preview Functions
+function showLinkPreview(creator, previewImage) {
+    if (!elements.linkPreview) return;
+
+    // Show the preview container
+    elements.linkPreview.classList.remove('hidden');
+
+    // Clear previous content
+    clearPreviousPreview();
+
+    // Show loading state
+    if (elements.previewLoader) {
+        elements.previewLoader.classList.remove('hidden');
+    }
+
+    if (elements.previewError) {
+        elements.previewError.classList.add('hidden');
+    }
+
+    // Set creator name if available
+    const creatorElement = elements.linkPreview.querySelector('.preview-creator');
+    if (creatorElement && creator) {
+        creatorElement.textContent = `@${creator}`;
+        creatorElement.classList.remove('hidden');
+    }
+
+    // Load preview image if available
+    if (previewImage && elements.previewImage) {
+        loadPreviewImage(previewImage);
+    } else {
+        // Hide loader and show error if no image
+        if (elements.previewLoader) {
+            elements.previewLoader.classList.add('hidden');
+        }
+        showPreviewError();
+    }
+}
+
+function loadPreviewImage(imageUrl) {
+    const img = new Image();
+
+    img.onload = function() {
+        if (elements.previewImage) {
+            elements.previewImage.src = imageUrl;
+            elements.previewImage.classList.remove('hidden');
+            elements.previewImage.setAttribute('alt', 'TikTok video preview');
+        }
+
+        if (elements.previewLoader) {
+            elements.previewLoader.classList.add('hidden');
+        }
+
+        if (elements.previewError) {
+            elements.previewError.classList.add('hidden');
+        }
+    };
+
+    img.onerror = function() {
+        console.warn('Failed to load preview image:', imageUrl);
+        showPreviewError();
+    };
+
+    // Start loading the image
+    img.src = imageUrl;
+}
+
+function showPreviewError() {
+    if (elements.previewLoader) {
+        elements.previewLoader.classList.add('hidden');
+    }
+
+    if (elements.previewError) {
+        elements.previewError.classList.remove('hidden');
+    }
+
+    // Show placeholder image
+    if (elements.previewImage) {
+        elements.previewImage.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0zNSA0MEg2NVY2MEgzNVY0MFoiIGZpbGw9IiM5Q0EzQUYiLz4KPHBhdGggZD0iTTQwIDQ1VjU1TDUwIDUwTDQwIDQ1WiIgZmlsbD0iIzZCNzI4MCIvPgo8L3N2Zz4K';
+        elements.previewImage.classList.remove('hidden');
+        elements.previewImage.setAttribute('alt', 'Preview image not available');
+    }
+}
+
+function clearPreviousPreview() {
+    if (elements.previewImage) {
+        elements.previewImage.src = '';
+        elements.previewImage.classList.add('hidden');
+    }
+
+    const creatorElement = elements.linkPreview?.querySelector('.preview-creator');
+    if (creatorElement) {
+        creatorElement.textContent = '';
+        creatorElement.classList.add('hidden');
+    }
+}
+
+function hideLinkPreview() {
+    if (elements.linkPreview) {
+        elements.linkPreview.classList.add('hidden');
+        clearPreviousPreview();
+    }
 }
